@@ -34,7 +34,6 @@ jobs:
         kubectl get pods -A
     - name: Deploy to minikube
       run:
-        cd manifests
         kubectl apply -f ./manifests/
     - name: Test nginx service URL
       run: |
