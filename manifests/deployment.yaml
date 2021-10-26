@@ -1,0 +1,66 @@
+# Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: thales
+  name: thales
+spec:
+  selector:
+    matchLabels:
+      app: thales
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+      maxUnavailable: 50%
+  template:
+    metadata:
+      labels:
+        app: thales
+    spec:
+      serviceAccountName: thales
+      containers:
+      - image: nginx:stable
+        name: nginx
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 101
+          runAsGroup: 101
+        env:
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: thales-secret
+              key: apikey
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+          readOnly: true
+          name: nginx-conf
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 3
+        resources:
+            limits:
+              cpu: "500m"
+              memory: "128Mi"
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+            items:
+            - key: nginx.conf
+              path: nginx.conf
+
