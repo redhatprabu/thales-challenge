@@ -1,4 +1,3 @@
----
 # Network policy to allow every pods to access nginx
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

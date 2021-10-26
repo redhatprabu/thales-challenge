@@ -1,4 +1,3 @@
----
 # Configmap
 # Used custom nginx file to avoid using port 80 ( to run by non-root user )
 apiVersion: v1

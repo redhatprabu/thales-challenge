@@ -13,9 +13,10 @@ jobs:
         uses: ./ # Uses an action in the root directory
         id: ksga
         with:
-          manifests-folders: './manifests/deployment.yaml'
+          manifests-folders: './manifests/*.yaml'
           ignore-exit-code: 'true'
           kube-score-version: '1.11.0'
+          output-file: 'output.txt'
   minikube:
     runs-on: ubuntu-latest
     name: Build deploy and test Thales Minikube
