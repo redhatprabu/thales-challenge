@@ -45,5 +45,5 @@ jobs:
         curl $(minikube service thales --url)
     - name: Test KubeNoTouble against API's
       run: |
-        bash -c "$(curl -sSL https://git.io/install-kubent)" && chmod 755 $(which kubent)
-        bash $(which kubent)
+        bash -c "$(curl -sSL https://git.io/install-kubent)" && chmod 755 /bin/kubent
+        bash /bin/kubent
