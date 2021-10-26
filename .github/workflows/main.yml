@@ -1,0 +1,48 @@
+name: CI
+on:
+  - pull_request
+#on: [push]
+jobs:
+  kube-score:
+    runs-on: ubuntu-latest
+    name: kube-score Scanning
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: kube-score action step
+        uses: ./ # Uses an action in the root directory
+        id: ksga
+        with:
+          manifests-folders: './manifests/deployment.yaml'
+          ignore-exit-code: 'true'
+          kube-score-version: '1.11.0'
+  minikube:
+    runs-on: ubuntu-latest
+    name: Build deploy and test Thales Minikube
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Start minikube
+      uses: hiberbee/github-action-minikube@latest
+    - name: Try the minikube thales cluster !
+      run: kubectl get pods -A
+    - name: check minikube
+      run: |
+        export SHELL=/bin/bash
+        kubectl get componentstatuses
+        kubectl get pods -A
+    - name: Deploy to minikube
+      run:
+        kubectl apply -f ./manifests/*.yaml
+    - name: Test nginx service URL
+      run: |
+        minikube service list
+        kubectl get deploy && sleep 50
+        kubectl get pods
+        minikube service thales --url
+        echo "------------------opening the thales service------------------"
+        curl $(minikube service thales --url)
+    - name: Test KubeNoTouble against API's
+      run: |
+        sh -c "$(curl -sSL https://git.io/install-kubent)" && chmod 755 $(which kubent)
+        sh $(which kubent)
