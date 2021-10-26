@@ -34,7 +34,8 @@ jobs:
         kubectl get pods -A
     - name: Deploy to minikube
       run:
-        kubectl apply -f ./manifests/*.yaml
+        cd manifests
+        kubectl apply -f *.yaml
     - name: Test nginx service URL
       run: |
         minikube service list
@@ -45,5 +46,6 @@ jobs:
         curl $(minikube service thales --url)
     - name: Test KubeNoTouble against API's
       run: |
+        cd ~
         sh -c "$(curl -sSL https://git.io/install-kubent)" && chmod 755 $(which kubent)
         sh $(which kubent)
