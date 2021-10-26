@@ -13,7 +13,7 @@ jobs:
         uses: ./ # Uses an action in the root directory
         id: ksga
         with:
-          manifests-folders: './manifests/'
+          manifests-folders: '../manifests/'
           ignore-exit-code: 'true'
           kube-score-version: '1.11.0'
           output-file: 'output.txt'
@@ -43,7 +43,3 @@ jobs:
         minikube service thales --url
         echo "------------------opening the thales service------------------"
         curl $(minikube service thales --url)
-    - name: Test KubeNoTouble against API's
-      run: |
-        bash -c "$(curl -sSL https://git.io/install-kubent)" && chmod 755 /bin/kubent
-        bash /bin/kubent
