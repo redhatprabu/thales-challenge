@@ -19,6 +19,7 @@ jobs:
           output-file: 'output.txt'
   minikube:
     runs-on: ubuntu-latest
+    needs: kube-score
     name: Build deploy and test Thales Minikube
     steps:
     - name: Checkout
